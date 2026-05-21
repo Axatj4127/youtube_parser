@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YT Digest">
+<meta name="theme-color" content="#0f0f0f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'self'; manifest-src 'self'; upgrade-insecure-requests">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>YouTube Digest</title>
+<style>
+:root {
+  --bg:#0f0f0f; --surf:#1a1a1a; --surf2:#242424;
+  --bd:rgba(255,255,255,0.08); --bd2:rgba(255,255,255,0.14);
+  --tx:#f0f0f0; --mu:#888; --hi:#555;
+  --red:#FF3B30; --grn:#30d158; --bl:#0a84ff;
+  --r:14px; --rs:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:48px}
+.hdr{position:sticky;top:0;z-index:10;background:rgba(15,15,15,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:.5px solid var(--bd);padding:14px 16px;display:flex;align-items:center;gap:12px}
+.hdr-t{flex:1}
+.hdr-t h1{font-size:17px;font-weight:600;letter-spacing:-.3px}
+.hdr-t p{font-size:12px;color:var(--mu);margin-top:1px}
+.ibtn{background:var(--surf2);border:.5px solid var(--bd2);border-radius:var(--rs);padding:9px 12px;color:var(--mu);cursor:pointer;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:500}
+.ibtn:active{transform:scale(.94)}
+.ibtn.on{background:rgba(10,132,255,.15);border-color:rgba(10,132,255,.35);color:var(--bl)}
+.pw{padding:16px 14px 0}
+.lbl{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--hi);margin-bottom:8px}
+.ta{width:100%;min-height:90px;max-height:160px;background:var(--surf);border:.5px solid var(--bd2);border-radius:var(--r);padding:12px 14px;font-family:monospace;font-size:12px;color:var(--tx);resize:vertical;line-height:1.6;display:block}
+.ta::placeholder{color:var(--hi)}
+.ta:focus{outline:none;border-color:rgba(10,132,255,.45)}
+.ar{display:flex;gap:8px;margin-top:10px}
+.pbtn{flex:1;padding:12px;background:var(--bl);border:none;border-radius:var(--rs);font-size:15px;font-weight:600;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.pbtn:active{opacity:.8;transform:scale(.98)}
+.dbtn{padding:12px 14px;background:var(--surf2);border:.5px solid var(--bd2);border-radius:var(--rs);color:var(--mu);cursor:pointer;display:flex;align-items:center}
+.dbtn:active{transform:scale(.94)}
+.eb{margin:10px 14px 0;padding:11px 14px;background:rgba(255,59,48,.1);border:.5px solid rgba(255,59,48,.25);border-radius:var(--rs);font-size:13px;color:#ff6961}
+.sh{padding:18px 14px 10px;font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--hi);display:flex;align-items:center;justify-content:space-between}
+.pl{background:var(--surf2);border:.5px solid var(--bd);border-radius:20px;padding:2px 9px;font-size:12px;color:var(--mu);letter-spacing:0;text-transform:none;font-weight:400}
+.cs{padding:0 14px}
+.card{background:var(--surf);border:.5px solid var(--bd);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.ct{padding:11px 14px;display:flex;align-items:center;gap:8px;border-bottom:.5px solid var(--bd)}
+.dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cn{font-size:13px;font-weight:600;flex:1}
+.nt{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;background:rgba(48,209,88,.12);color:var(--grn);border:.5px solid rgba(48,209,88,.2)}
+.dt{font-size:11px;color:var(--hi)}
+.cb{padding:12px 14px}
+.vt{font-size:14px;font-weight:500;line-height:1.45;margin-bottom:13px}
+.br{display:flex;gap:7px;flex-wrap:wrap}
+.cp{display:flex;align-items:center;gap:5px;padding:9px 14px;min-height:40px;background:var(--surf2);border:.5px solid var(--bd2);border-radius:var(--rs);color:var(--mu);font-size:13px;font-weight:500;cursor:pointer}
+.cp:active{transform:scale(.95)}
+.cp.ok{background:rgba(48,209,88,.1);border-color:rgba(48,209,88,.25);color:var(--grn)}
+.wb{display:flex;align-items:center;gap:5px;padding:9px 14px;min-height:40px;background:rgba(255,59,48,.12);border:.5px solid rgba(255,59,48,.2);border-radius:var(--rs);color:#ff6961;font-size:13px;font-weight:500;cursor:pointer}
+.wb:active{opacity:.7}
+.ps{margin-top:12px;padding-top:12px;border-top:.5px solid var(--bd)}
+.plb{font-size:11px;color:var(--hi);margin-bottom:6px;font-weight:500;letter-spacing:.3px}
+.pp{font-size:12px;color:var(--mu);background:var(--bg);border:.5px dashed var(--bd2);border-radius:var(--rs);padding:10px 12px;cursor:pointer;line-height:1.6;white-space:pre-wrap;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.pp:active{border-color:rgba(10,132,255,.4)}
+.ph{font-size:11px;color:var(--hi);margin-top:4px}
+.pta{width:100%;min-height:90px;padding:9px 11px;background:var(--bg);border:.5px solid rgba(10,132,255,.4);border-radius:var(--rs);font-family:monospace;font-size:12px;color:var(--tx);resize:vertical;line-height:1.6;display:block}
+.pta:focus{outline:none;border-color:rgba(10,132,255,.7)}
+.pth{font-size:11px;color:var(--hi);margin-top:4px;line-height:1.5}
+.ebs{display:flex;gap:8px;margin-top:8px}
+.sb{padding:8px 18px;background:rgba(48,209,88,.12);border:.5px solid rgba(48,209,88,.25);border-radius:var(--rs);color:var(--grn);font-size:13px;font-weight:600;cursor:pointer}
+.sb:active{opacity:.7}
+.xcb{padding:8px 14px;background:none;border:.5px solid var(--bd2);border-radius:var(--rs);color:var(--mu);font-size:13px;cursor:pointer}
+.xcb:active{opacity:.7}
+.em{padding:36px 20px;text-align:center;color:var(--hi);font-size:14px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="#FF3B30" style="flex-shrink:0" aria-hidden="true"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.2 2.8 12 2.8 12 2.8s-4.2 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.6 21.8 12 21.9 12 21.9s4.2 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+  <div class="hdr-t"><h1>YouTube Digest</h1><p>Paste &rarr; parse &rarr; copy</p></div>
+  <button class="ibtn" id="settBtn" onclick="toggleSett()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    Prompts
+  </button>
+</div>
+
+<div class="pw">
+  <div class="lbl">Paste your daily digest email</div>
+  <textarea class="ta" id="ta" placeholder="Open your YouTube Daily Digest email, select all, copy, then paste here…"></textarea>
+  <div class="ar">
+    <button class="pbtn" onclick="doParse()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      Parse digest
+    </button>
+    <button class="dbtn" onclick="doClear()" title="Clear pasted email">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+      Clear email
+    </button>
+  </div>
+</div>
+
+<div id="errBox"></div>
+<div id="out"></div>
+
+<script>
+var COLORS = ["#6366f1","#f59e0b","#10b981","#3b82f6","#ec4899","#8b5cf6","#14b8a6","#f97316"];
+var DP = "Summarize the key insights from this episode:\n\nTitle: {title}\n\nMain takeaways, key arguments, and actionable advice.";
+var SK = "ytd2";
+
+var cards = [];
+var prompts = {};
+var showSett = false;
+var editIdx = -1;
+
+try { prompts = JSON.parse(localStorage.getItem(SK) || "{}"); } catch(e) {}
+
+function saveP() { try { localStorage.setItem(SK, JSON.stringify(prompts)); } catch(e) {} }
+
+function getP(ch, title) {
+  return (prompts[ch] || DP).replace(/{title}/g, title);
+}
+
+function fmt(iso) {
+  try { return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short"}); } catch(e) { return ""; }
+}
+
+function esc(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+function cpText(text, id) {
+  function flash() {
+    var b = document.getElementById(id);
+    if (!b) return;
+    var o = b.innerHTML;
+    b.classList.add("ok");
+    b.innerHTML = "&#10003; Copied!";
+    setTimeout(function(){ if(b){b.classList.remove("ok");b.innerHTML=o;} }, 1800);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(flash, function(){ fbCopy(text); flash(); });
+  } else {
+    fbCopy(text); flash();
+  }
+}
+
+function fbCopy(text) {
+  var el = document.createElement("textarea");
+  el.value = text;
+  el.setAttribute("readonly","");
+  el.style.cssText = "position:absolute;left:-9999px;top:-9999px";
+  document.body.appendChild(el);
+  el.select();
+  try { document.execCommand("copy"); } catch(e){}
+  document.body.removeChild(el);
+}
+
+function onCopy(i, f) {
+  var ch = cards[i];
+  if (!ch) return;
+  var t = f==="title" ? ch.title : f==="url" ? ch.url : getP(ch.channel, ch.title);
+  cpText(t, f+i);
+}
+
+function onWatch(i) {
+  var ch = cards[i];
+  if (ch && ch.url) window.open(ch.url, "_blank");
+}
+
+function onEdit(i) { editIdx = i; render(); setTimeout(function(){ var t=document.getElementById("pta"); if(t)t.focus(); },40); }
+
+function onSave(i) {
+  var t = document.getElementById("pta");
+  if (t && cards[i]) { prompts[cards[i].channel] = t.value; saveP(); }
+  editIdx = -1; render();
+}
+
+function onCancel() { editIdx = -1; render(); }
+
+function toggleSett() {
+  showSett = !showSett; editIdx = -1;
+  document.getElementById("settBtn").classList.toggle("on", showSett);
+  render();
+}
+
+function doParse() {
+  var raw = document.getElementById("ta").value.trim();
+  if (!raw) { showErr("Paste your email content first."); return; }
+  var res = parse(raw);
+  if (!res.length) { showErr("No channel data found. Paste the full email including the table."); return; }
+  document.getElementById("errBox").innerHTML = "";
+  cards = res;
+  render();
+}
+
+function parse(text) {
+  var lines = text.split("\n");
+  var out = [];
+  for (var i = 0; i < lines.length; i++) {
+    var parts = lines[i].split("\t");
+    if (parts.length >= 3 && (parts[1]==="OK" || parts[1]==="Error")) {
+      var ch = parts[0].trim();
+      if (parts[2].trim() !== "New") continue;
+      var title = (parts[3]||"").trim();
+      var url = "", pub = "";
+      if (parts[4] && parts[4].trim().indexOf("http")===0) {
+        url = parts[4].trim(); pub = (parts[5]||"").trim();
+      } else {
+        for (var j = i+1; j < Math.min(i+5, lines.length); j++) {
+          var nl = lines[j].trim();
+          if (nl.indexOf("http")===0) { var np=nl.split("\t"); url=np[0].trim(); pub=(np[1]||"").trim(); break; }
+          if (!title && nl && nl.indexOf("@")!==0) title = nl.split("\t")[0].trim();
+        }
+      }
+      if (ch && (title||url)) out.push({channel:ch, title:title, url:url, published:pub});
+    }
+  }
+  return out;
+}
+
+function doClear() {
+  document.getElementById("ta").value = "";
+  document.getElementById("errBox").innerHTML = "";
+}
+
+function showErr(m) { document.getElementById("errBox").innerHTML = '<div class="eb">'+esc(m)+'</div>'; }
+
+function render() {
+  var el = document.getElementById("out");
+  if (!cards.length) { el.innerHTML = ""; return; }
+  var h = '<div class="sh">New episodes <span class="pl">'+cards.length+'</span></div><div class="cs">';
+  for (var i = 0; i < cards.length; i++) {
+    var ch = cards[i];
+    var col = COLORS[i % COLORS.length];
+    var isEd = editIdx === i;
+    h += '<div class="card">';
+    h += '<div class="ct"><div class="dot" style="background:'+col+'"></div>';
+    h += '<span class="cn">'+esc(ch.channel)+'</span>';
+    h += '<span class="nt">New</span><span class="dt">'+fmt(ch.published)+'</span></div>';
+    h += '<div class="cb"><div class="vt">'+esc(ch.title||"(no title)")+'</div>';
+    h += '<div class="br">';
+    h += '<button class="cp" id="title'+i+'" onclick="onCopy('+i+',\'title\')">&#x2398; Title</button>';
+    h += '<button class="cp" id="url'+i+'" onclick="onCopy('+i+',\'url\')">&#128279; URL</button>';
+    h += '<button class="cp" id="prompt'+i+'" onclick="onCopy('+i+',\'prompt\')">&#128172; Prompt</button>';
+    if (ch.url) h += '<button class="wb" onclick="onWatch('+i+')">&#9654; Watch</button>';
+    h += '</div>';
+    if (showSett) {
+      h += '<div class="ps"><div class="plb">PROMPT TEMPLATE &mdash; use {title} for episode title</div>';
+      if (isEd) {
+        h += '<textarea class="pta" id="pta">'+esc(prompts[ch.channel]||DP)+'</textarea>';
+        h += '<div class="pth">{title} is replaced with the actual episode title when copied.</div>';
+        h += '<div class="ebs"><button class="sb" onclick="onSave('+i+')">Save</button><button class="xcb" onclick="onCancel()">Cancel</button></div>';
+      } else {
+        h += '<div class="pp" onclick="onEdit('+i+')">'+esc(getP(ch.channel,ch.title).slice(0,200))+'</div>';
+        h += '<div class="ph">Tap to edit</div>';
+      }
+      h += '</div>';
+    }
+    h += '</div></div>';
+  }
+  h += '</div>';
+  el.innerHTML = h;
+}
+/* Register service worker for home-screen / offline use.
+   Disabled on file:// because service workers require HTTPS or localhost. */
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", function() {
+    navigator.serviceWorker.register("./sw.js").catch(function() {});
+  });
+}
+
+</script>
+</body>
+</html>
